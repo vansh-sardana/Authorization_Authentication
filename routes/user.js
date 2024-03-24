@@ -3,7 +3,7 @@ const router= express.Router();
 
 
 
-const {login, signup}= require("../controllers/Auth");
+const {login, signup, getEmail}= require("../controllers/Auth");
 const { auth, isStudent, isAdmin } = require("../middlewares/auth");
 
 router.post("/login",login);
@@ -22,5 +22,7 @@ router.get("/student", auth, isStudent, (req, res)=>{
         message: "Welcome to the students Page"
     })
 })
+
+router.get("/getEmail", auth, getEmail);
 
 module.exports = router;

@@ -29,16 +29,16 @@ exports.login= async(req,res)=>{
             let token= jwt.sign(payload, process.env.JWT_SECRET,{
                 expiresIn: "2h"
             });
-            // console.log(user);
+            
             user= user.toObject();
             user.pass=undefined;
             user.token= token;
-            // console.log(user);
+            
             const options= {
                 expires:new Date(Date.now()+3*24*60*60*1000),
                 httpOnly: true
             }
-            res.cookie(`token${user.name}`, token, options).status(200).json({
+            res.cookie(`token`, token, options).status(200).json({
                 success: true,
                 message: "Successfully Logged In",
                 token,
@@ -92,6 +92,24 @@ exports.signup= async(req,res)=>{
     }
     catch(e){
         console.log(e);
+        res.status(500).json({
+            success: false,
+            message: e
+        })
+    }
+}
+
+exports.getEmail= async(req, res)=>{
+    try{
+        const id= req.user.id;
+        const user= await User.find({_id: id});
+        res.status(200).json({
+            user, 
+            success:true,
+            message:"Le bhai"
+        });
+
+    }catch(e){
         res.status(500).json({
             success: false,
             message: e
